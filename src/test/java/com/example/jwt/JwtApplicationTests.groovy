@@ -1,17 +1,21 @@
 package com.example.jwt;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.web.servlet.MockMvc;
+import spock.lang.Shared;
 import spock.lang.Specification;
 
 @SpringBootTest
 class JwtApplicationTests extends Specification {
 
+    @Shared
+    def client = new RESTClient( "$SERVER_URL:$SERVER_PORT")
 
-    def "writing first tests with groovy using spock"() {
-        expect: 'mohammad' == 'mohammad'
+    def 'should return 200 code when used valid credentials' () {
+        when: 'login with invalid credentials'
+        def response = client.get( path : '/login' )
+
+        then: 'server returns 200 code (ok)'
+        assert response.status == 200 : 'response code should be 200 when tried to authenticate with valid credentials'
     }
 
 }
