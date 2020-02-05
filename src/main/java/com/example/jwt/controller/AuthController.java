@@ -1,11 +1,11 @@
 package com.example.jwt.controller;
 
 import com.example.jwt.entity.User;
-import com.example.jwt.repository.UserRepository;
 import com.example.jwt.service.UserService;
-import com.example.jwt.transformer.DTO;
-import com.example.jwt.transformer.UserTransformer;
+import com.example.jwt.transformer.BaseResponseDTO;
+import com.example.jwt.transformer.UserDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userRepository;
+    private final UserService userService;
 
     @PostMapping(path = "login")
     public long login(){
@@ -25,8 +25,10 @@ public class AuthController {
     }
 
     @PostMapping(path = "register")
-    public User register(@Valid @RequestBody User user){
+    public BaseResponseDTO<UserDTO> register(@Valid @RequestBody User user){
 
-        return userRepository.RegisterUser(user);
+        UserDTO userTransformer = new UserDTO(userService.RegisterUser(user));
+
+        return new BaseResponseDTO<>(userTransformer, HttpStatus.OK.value());
     }
 }
