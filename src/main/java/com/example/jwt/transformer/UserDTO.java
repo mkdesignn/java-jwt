@@ -13,11 +13,4 @@ public class UserDTO {
 
     private String email;
 
-    public UserDTO(User user){
-
-        this.username = user.getUsername();
-        this.name = user.getName();
-        this.email = user.getEmail();
-    }
-
 }
