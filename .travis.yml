@@ -1,7 +1,22 @@
-sudo: required
+#we use java
 language: java
+
+#We add the java development kit
 jdk: oraclejdk8
+
+#
 dist: trusty
+
+services:
+  - mysql
+
+before_install:
+  - sudo mysql -e 'CREATE DATABASE jwt;'
+  - sudo mysql -e 'select database();'
+  - sudo mysql -e 'SHOW DATABASES;'
+  - sudo mysql -e 'USE jwt;'
+  - sudo mysql -e 'select database();'
+  - sudo mysql --version
 
 script:
   - ./mvnw clean install -B
