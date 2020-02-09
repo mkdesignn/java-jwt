@@ -51,6 +51,27 @@ class DataProviderAuth {
         return object
     }
 
+    static def loginWithCorrectParams() {
+        def object = new JSONObject()
+        object = attachUsername(object)
+        object = attachPassword(object)
+        return object
+    }
+
+    static def loginWithWrongPassword() {
+        def object = new JSONObject()
+        object = attachUsername(object)
+        object = attachWrongPassword(object)
+        return object
+    }
+
+    static def loginWithNonexistentUsername() {
+        def object = new JSONObject()
+        object = attachNonexistentUsername(object)
+        object = attachPassword(object)
+        return object
+    }
+
     private static JSONObject attachName(JSONObject object) {
         object.put("name", "mohammad")
         return object
@@ -61,8 +82,18 @@ class DataProviderAuth {
         return object
     }
 
+    private static JSONObject attachNonexistentUsername(JSONObject object) {
+        object.put("username", "nonexistent_mohammad")
+        return object
+    }
+
     private static JSONObject attachPassword(JSONObject object) {
         object.put("password", "mohammad")
+        return object
+    }
+
+    private static JSONObject attachWrongPassword(JSONObject object) {
+        object.put("password", "wrong_mohammad")
         return object
     }
 
@@ -83,5 +114,4 @@ class DataProviderAuth {
         HttpEntity request = new HttpEntity<String>(object.toString(), headers)
         return client.exchange(url, method, request, String.class)
     }
-
 }

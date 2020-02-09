@@ -1,9 +1,7 @@
 package com.example.jwt.entity;
 
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.context.annotation.Primary;
 
 import javax.persistence.*;
@@ -13,12 +11,14 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigInteger;
 
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Setter
 @Getter
 @Builder
 @Table(name = "users")
-public class User implements Serializable {
+public class AppUser implements Serializable {
 
     @Id
     @Column(name = "id")

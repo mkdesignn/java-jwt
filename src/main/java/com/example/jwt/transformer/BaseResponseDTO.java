@@ -1,6 +1,7 @@
 package com.example.jwt.transformer;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class BaseResponseDTO<T> {
