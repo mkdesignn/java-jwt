@@ -6,3 +6,4 @@ dist: trusty
 script:
   - ./mvnw clean install -B
   - mvn test -B
+  - mvn spring-boot:run
