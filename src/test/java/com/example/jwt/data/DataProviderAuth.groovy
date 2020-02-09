@@ -1,6 +1,7 @@
 package com.example.jwt.data
 
 import org.json.JSONObject
+import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.*
 import org.springframework.web.client.RestTemplate
 
@@ -77,7 +78,7 @@ class DataProviderAuth {
         return new HttpEntity<String>(object.toString(), headers)
     }
 
-    static ResponseEntity exchange(RestTemplate client, String url, HttpMethod method, JSONObject object) {
+    static ResponseEntity exchange(TestRestTemplate client, String url, HttpMethod method, JSONObject object) {
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
         HttpEntity request = new HttpEntity<String>(object.toString(), headers)
