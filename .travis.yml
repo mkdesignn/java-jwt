@@ -5,3 +5,4 @@ dist: trusty
 
 script:
   - ./mvnw clean install -B
+  - mvn test -B
