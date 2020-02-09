@@ -47,7 +47,7 @@ class AuthSpec extends Specification {
         then:
         def exception = response.andExpect(status().isBadRequest())
                 .andReturn().getResolvedException().getMessage()
-        assert exception.indexOf("nsalam") > 0
+        assert exception.indexOf("name") > 0
     }
 
     def 'register should return 400 bad request when password has not sent to it'() {
