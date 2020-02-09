@@ -4,8 +4,8 @@ language: java
 #We add the java development kit
 jdk: oraclejdk8
 
-#
-dist: trusty
+#ubunto version  Ubuntu Precise |	Ubuntu Trusty |	Ubuntu Xenial	| Ubuntu Bionic
+dist: bionic
 
 services:
   - mysql
