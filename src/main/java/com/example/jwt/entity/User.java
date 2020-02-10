@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigInteger;
 
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
 @Setter
