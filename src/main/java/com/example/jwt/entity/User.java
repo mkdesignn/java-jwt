@@ -11,12 +11,12 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigInteger;
 
+@AllArgsConstructor
 @Entity
 @Setter
 @Getter
 @Builder
 @Table(name = "users")
-@AllArgsConstructor
 public class User implements Serializable {
 
     @Id

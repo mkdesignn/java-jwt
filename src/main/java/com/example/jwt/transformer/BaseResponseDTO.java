@@ -3,9 +3,8 @@ package com.example.jwt.transformer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"data"})
 @Data
 public class BaseResponseDTO<T> {
 
