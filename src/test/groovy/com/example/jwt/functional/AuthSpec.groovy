@@ -145,6 +145,6 @@ class AuthSpec extends Specification {
 
         then:
         def exception = thrown(ExistentUsernameException)
-        assert exception.getMessage().indexOf("Username")
+        print(exception.getMessage().toString())
     }
 }
