@@ -24,7 +24,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping(path = "register")
-    public BaseResponseDTO register(@Valid @RequestBody User user) {
+    public BaseResponseDTO register(@Valid @RequestBody User user) throws ExistentUsernameException {
 
         ModelMapper modelMapper = new ModelMapper();
         UserDTO userTransformer = modelMapper.map(userService.registerUser(user), UserDTO.class);
