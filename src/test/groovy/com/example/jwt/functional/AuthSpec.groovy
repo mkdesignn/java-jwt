@@ -144,7 +144,7 @@ class AuthSpec extends Specification {
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(personJsonObject.toString()))
 
         then:
-        def exception = thrown(NestedServletException)
+        def exception = thrown(ExistentUsernameException)
         assert exception.getMessage().indexOf("Username has already been taken")
     }
 }
