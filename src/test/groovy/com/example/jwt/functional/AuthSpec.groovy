@@ -145,6 +145,6 @@ class AuthSpec extends Specification {
 
         then:
         def exception = thrown(ExistentUsernameException)
-        assert exception.getMessage().indexOf("Username has already been taken") > 0
+        assert exception.getMessage().indexOf("has already been taken") > 0
     }
 }
