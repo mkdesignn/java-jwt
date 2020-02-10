@@ -1,6 +1,6 @@
 package com.example.jwt.controller;
 
-import com.example.jwt.entity.AppUser;
+import com.example.jwt.entity.User;
 import com.example.jwt.exceptions.ExistentUsernameException;
 import com.example.jwt.service.UserService;
 import com.example.jwt.transformer.BaseResponseDTO;
@@ -22,7 +22,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping(path = "register")
-    public BaseResponseDTO register(@Valid @RequestBody AppUser user) {
+    public BaseResponseDTO register(@Valid @RequestBody User user) {
 
         try {
             ModelMapper modelMapper = new ModelMapper();
