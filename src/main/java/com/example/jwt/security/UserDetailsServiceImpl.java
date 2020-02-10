@@ -1,6 +1,5 @@
 package com.example.jwt.security;
 
-import com.example.jwt.entity.AppUser;
 import com.example.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -19,10 +18,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        AppUser user = userRepository.findByUsername(s);
+
+        com.example.jwt.entity.User user = userRepository.findByUsername(s);
         if (user == null) {
             throw new UsernameNotFoundException(s);
         }
+
         return new User(user.getUsername(), user.getPassword(), Collections.emptyList());
     }
 }
