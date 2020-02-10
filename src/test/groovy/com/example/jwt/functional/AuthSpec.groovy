@@ -2,12 +2,17 @@ package com.example.jwt.functional
 
 import com.example.jwt.controller.AuthController
 import com.example.jwt.data.DataProviderAuth
+import com.example.jwt.entity.User
+import com.example.jwt.repository.UserRepository
+import com.example.jwt.service.UserService
+import com.example.jwt.service.UserServiceImp
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.client.HttpClientErrorException
 import spock.lang.Specification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -19,6 +24,9 @@ class AuthSpec extends Specification {
 
     @Autowired
     private AuthController authController
+
+    @Autowired
+    private UserService userService
 
     private MockMvc mockMvc
 
@@ -82,5 +90,56 @@ class AuthSpec extends Specification {
 
         then:
         assert response.andExpect(status().isOk())
+    }
+
+    def 'login should return 403 if password is incorrect'() {
+
+        when:
+        def personJsonObject = DataProviderAuth.loginWithWrongPassword()
+        def response = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON).content(personJsonObject.toString()))
+
+
+        then:
+        assert response.andExpect(status().isForbidden())
+    }
+
+    def 'login should return 403 if username is not exist'() {
+
+        when:
+        def personJsonObject = DataProviderAuth.loginWithNonexistentUsername()
+        def response = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON).content(personJsonObject.toString()))
+
+        then:
+        assert response.andExpect(status().isForbidden())
+    }
+
+    def 'login should return 200 if all goes well'() {
+
+        when:
+        def personJsonObject = DataProviderAuth.loginWithCorrectParams()
+        def response = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON).content(personJsonObject.toString()))
+
+        then:
+        assert response.andExpect(status().isOk())
+    }
+
+    def 'register should return 400 bad request if Username has already been taken'() {
+
+        when:
+        User user = userService.registerUser(
+                User.builder()
+                        .email("mohammad.kaab@gmail.com")
+                        .name("mohammad")
+                        .username("mohammad")
+                        .password("mohammad")
+                        .build()
+        )
+
+        def personJsonObject = DataProviderAuth.registerWithAllFields()
+        def response = mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(personJsonObject.toString()))
+
+        then:
+        def exception = response.andExpect(status().isBadRequest()).andReturn().getResolvedException().getMessage()
+        assert exception.indexOf("username")
     }
 }

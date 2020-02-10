@@ -14,13 +14,7 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public User registerUser(User user) throws ExistentUsernameException {
-
-        User checkingUser = userRepository.findByUsername(user.getUsername());
-
-        if (checkingUser != null) {
-            throw new ExistentUsernameException();
-        }
+    public User registerUser(User user) {
 
         return userRepository.save(
                 User.builder()
