@@ -17,11 +17,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        com.example.jwt.entity.User user = userRepository.findByUsername(s);
+        com.example.jwt.entity.User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException(s);
+            throw new UsernameNotFoundException(username);
         }
 
         return new User(user.getUsername(), user.getPassword(), Collections.emptyList());
