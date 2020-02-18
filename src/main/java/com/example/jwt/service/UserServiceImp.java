@@ -44,9 +44,7 @@ public class UserServiceImp implements UserService {
 
     public User registerUser(User user) throws ExistentUsernameException {
 
-        User checkingUser = userRepository.findByUsername(user.getUsername());
-
-        if (checkingUser != null) {
+        if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new ExistentUsernameException();
         }
 
