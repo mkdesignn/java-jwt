@@ -1,7 +1,6 @@
-package com.example.jwt.functional
+package com.example.jwt.integration
 
 import com.example.jwt.controller.UserController
-import com.example.jwt.entity.User
 import com.example.jwt.faker.UserFaker
 import com.example.jwt.repository.UserRepository
 import com.example.jwt.service.UserServiceImp
@@ -18,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserSpec extends Specification{
+class UserSpec extends Specification {
 
     @Autowired
     UserController userController
@@ -29,23 +28,17 @@ class UserSpec extends Specification{
     @Autowired
     UserRepository userRepository
 
-    def "remove should return no content if all goes well"()
-    {
+    def "user should not be found in database if delete endpoint get called"(){
 
         given:
         def mockMvc = MockMvcBuilders.standaloneSetup(userController).build()
         def user = userFaker.create()
-        def parser = new JSONParser()
 
         when:
-        def response = mockMvc.perform(delete("/user/"+user.id))
+        mockMvc.perform(delete("/user/"+user.id))
 
         then:
-        response.andExpect(status().isOk())
-
-        JSONObject json = (JSONObject) parser.parse(response.andReturn().getResponse().getContentAsString())
-        assert json.status == 204
-//        userRepository.findByUsername(user.getUsername())
+        assert userRepository.findByUsername(user.getUsername()) == null
 
     }
 }
