@@ -3,6 +3,7 @@ package com.example.jwt.service;
 import com.example.jwt.entity.User;
 import com.example.jwt.exceptions.ExistentUsernameException;
 import com.example.jwt.exceptions.IncorrectCredentialException;
+import com.example.jwt.exceptions.UserNotExistsException;
 import com.example.jwt.repository.UserRepository;
 import com.example.jwt.security.JwtUtil;
 import com.example.jwt.transformer.TokenDTO;
@@ -58,6 +59,14 @@ public class UserServiceImp implements UserService {
                         .email(user.getEmail())
                         .build()
         );
+    }
+
+    public void delete(Long id) throws UserNotExistsException {
+        if(userRepository.findById(id).isPresent()){
+            userRepository.delete(userRepository.findById(id).get());
+        } else {
+            throw new UserNotExistsException();
+        }
     }
 
 }
