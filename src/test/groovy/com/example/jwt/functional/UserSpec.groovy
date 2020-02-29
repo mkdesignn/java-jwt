@@ -1,10 +1,8 @@
 package com.example.jwt.functional
 
 import com.example.jwt.controller.UserController
-import com.example.jwt.entity.User
 import com.example.jwt.faker.UserFaker
 import com.example.jwt.repository.UserRepository
-import com.example.jwt.service.UserServiceImp
 import net.minidev.json.parser.JSONParser
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +43,6 @@ class UserSpec extends Specification{
 
         JSONObject json = (JSONObject) parser.parse(response.andReturn().getResponse().getContentAsString())
         assert json.status == 204
-//        userRepository.findByUsername(user.getUsername())
 
     }
 }
