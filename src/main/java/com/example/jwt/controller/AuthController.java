@@ -4,16 +4,17 @@ import com.example.jwt.entity.User;
 import com.example.jwt.exceptions.ExistentUsernameException;
 import com.example.jwt.service.UserService;
 import com.example.jwt.transformer.BaseResponseDTO;
+import com.example.jwt.transformer.TokenDTO;
 import com.example.jwt.transformer.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +23,16 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping(path = "/login")
-    public ResponseEntity login(@RequestBody User user) throws Exception {
-        return userService.login(user);
+    public BaseResponseDTO login(@RequestBody User user) throws Exception {
+
+        List<String> list = userService.login(user);
+
+        return new BaseResponseDTO<>(
+                TokenDTO.builder()
+                        .token(list.get(0))
+                        .refresh_token(list.get(1))
+                        .build(), HttpStatus.OK.value());
+
     }
 
     @PostMapping(path = "/register")
