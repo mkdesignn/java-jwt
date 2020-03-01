@@ -5,8 +5,12 @@ import com.example.jwt.exceptions.ExistentUsernameException;
 import com.example.jwt.exceptions.IncorrectCredentialException;
 import com.example.jwt.repository.UserRepository;
 import com.example.jwt.security.JwtUtil;
+import com.example.jwt.transformer.BaseResponseDTO;
 import com.example.jwt.transformer.TokenDTO;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.utility.RandomString;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +19,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +35,7 @@ public class UserServiceImp implements UserService {
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
-    public ResponseEntity<TokenDTO> login(User user) throws Exception {
+    public List<String> login(User user) throws Exception {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
@@ -37,9 +45,17 @@ public class UserServiceImp implements UserService {
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-        final String token = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new TokenDTO(token));
+        User userByUsername = userRepository.findByUsername(user.getUsername());
+        String randomString = RandomString.make(64);
+        userByUsername.setRefreshToken(randomString);
+        userRepository.save(userByUsername);
+
+        List<String> list = new ArrayList<>();
+        list.add(jwtUtil.generateToken(userDetails));
+        list.add(randomString);
+
+        return list;
     }
 
     public User registerUser(User user) throws ExistentUsernameException {
