@@ -17,8 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.example.jwt.security.SecurityConstants.LOGIN_URL;
-import static com.example.jwt.security.SecurityConstants.SIGN_UP_URL;
+import static com.example.jwt.security.SecurityConstants.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -35,6 +34,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, LOGIN_URL).permitAll()
+                .antMatchers(HttpMethod.GET, REFRESH_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // this disables session creation on Spring Security

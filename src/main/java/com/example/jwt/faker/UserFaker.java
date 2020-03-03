@@ -4,6 +4,7 @@ import com.example.jwt.entity.User;
 import com.example.jwt.repository.UserRepository;
 import com.github.javafaker.Faker;
 import lombok.*;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,7 @@ public class UserFaker implements FakerInterface<User> {
         Faker faker = new Faker();
 
         return userRepository.save(User.builder()
+                .refreshToken(RandomString.make(64))
                 .email(faker.bothify("????##@gmail.com"))
                 .username(username == null ? faker.bothify("????????#######") : username)
                 .password(password == null ? bCryptPasswordEncoder.encode(faker.bothify("????????#######")) : bCryptPasswordEncoder.encode(password))
@@ -46,6 +48,7 @@ public class UserFaker implements FakerInterface<User> {
         Faker faker = new Faker();
 
         return User.builder()
+                .refreshToken(RandomString.make(64))
                 .email(faker.bothify("????##@gmail.com"))
                 .username(username.isEmpty() ? faker.bothify("????????#######") : username)
                 .password(password.isEmpty() ? faker.bothify("????????#######") : password)

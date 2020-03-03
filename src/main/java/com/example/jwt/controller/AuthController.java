@@ -8,10 +8,9 @@ import com.example.jwt.transformer.TokenDTO;
 import com.example.jwt.transformer.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -42,4 +41,18 @@ public class AuthController {
         UserDTO userTransformer = modelMapper.map(userService.registerUser(user), UserDTO.class);
         return new BaseResponseDTO<>(userTransformer, HttpStatus.OK.value());
     }
+
+    @GetMapping(path = "/refresh")
+    public BaseResponseDTO refresh(@RequestParam(name = "refresh_token") String refreshToken) throws Exception {
+
+        List<String> list = userService.refreshToken(refreshToken);
+
+        return new BaseResponseDTO<>(
+                TokenDTO.builder()
+                        .token(list.get(0))
+                        .refresh_token(list.get(1))
+                        .build(), HttpStatus.OK.value());
+
+    }
+
 }

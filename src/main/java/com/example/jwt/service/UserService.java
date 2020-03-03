@@ -13,6 +13,8 @@ public interface UserService {
 
     List<String> login(User user) throws Exception;
 
+    List<String> refreshToken(String token) throws Exception;
+
     User registerUser(User user) throws ExistentUsernameException;
 
     void delete(Long id) throws UserNotExistsException;

@@ -3,6 +3,7 @@ package com.example.jwt.service;
 import com.example.jwt.entity.User;
 import com.example.jwt.exceptions.ExistentUsernameException;
 import com.example.jwt.exceptions.IncorrectCredentialException;
+import com.example.jwt.exceptions.RefreshTokenException;
 import com.example.jwt.exceptions.UserNotExistsException;
 import com.example.jwt.repository.UserRepository;
 import com.example.jwt.security.JwtUtil;
@@ -31,7 +32,6 @@ public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
@@ -45,18 +45,8 @@ public class UserServiceImp implements UserService {
             throw new IncorrectCredentialException();
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        return generateToken(user);
 
-        User userByUsername = userRepository.findByUsername(user.getUsername());
-        String randomString = RandomString.make(64);
-        userByUsername.setRefreshToken(randomString);
-        userRepository.save(userByUsername);
-
-        List<String> list = new ArrayList<>();
-        list.add(jwtUtil.generateToken(userDetails));
-        list.add(randomString);
-
-        return list;
     }
 
     public User registerUser(User user) throws ExistentUsernameException {
@@ -83,4 +73,28 @@ public class UserServiceImp implements UserService {
         }
     }
 
+    public List<String> refreshToken(String token) throws Exception {
+
+        User user = userRepository.findByRefreshToken(token);
+        if(user == null){
+            throw new RefreshTokenException();
+        }
+
+        return generateToken(user);
+    }
+
+    private List<String> generateToken(User user){
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        User userByUsername = userRepository.findByUsername(user.getUsername());
+        String randomString = RandomString.make(64);
+        userByUsername.setRefreshToken(randomString);
+        userRepository.save(userByUsername);
+
+        List<String> list = new ArrayList<>();
+        list.add(jwtUtil.generateToken(userDetails));
+        list.add(randomString);
+
+        return list;
+    }
 }

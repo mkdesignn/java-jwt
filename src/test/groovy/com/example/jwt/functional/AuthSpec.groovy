@@ -2,6 +2,7 @@ package com.example.jwt.functional
 
 import com.example.jwt.controller.AuthController
 import com.example.jwt.data.DataProviderAuth
+import com.example.jwt.entity.User
 import com.example.jwt.faker.UserFaker
 import com.example.jwt.service.UserService
 import net.minidev.json.parser.JSONParser
@@ -18,6 +19,7 @@ import spock.lang.Specification
 import javax.servlet.ServletException
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
@@ -162,6 +164,42 @@ class AuthSpec extends Specification {
 
         when:
         def response = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON).content(personJsonObject.toString()))
+                .andReturn().getResponse().getContentAsString()
+
+        then:
+        JSONParser parser = new JSONParser()
+        JSONObject json = (JSONObject) parser.parse(response)
+
+        assert json.data.token != null
+        assert json.data.refresh_token != null
+    }
+
+    def 'refresh should throw an error if it did not send in the request'() {
+
+        when:
+        def response = mockMvc.perform(get("/refresh"))
+
+        then:
+        assert response.andReturn().getResolvedException().getMessage().indexOf("refresh_token") >= 0
+    }
+
+    def 'refresh should throw an error if refresh_token was not found in database'() {
+
+        when:
+        mockMvc.perform(get("/refresh?refresh_token=123"))
+
+        then:
+        def exception = thrown(Exception)
+        assert exception.getMessage().indexOf("Unauthorized to do the request") >= 0
+    }
+
+    def 'refresh should return expected response'() {
+
+        given:
+        User user = userFaker.create()
+
+        when:
+        def response = mockMvc.perform(get("/refresh?refresh_token="+user.getRefreshToken()))
                 .andReturn().getResponse().getContentAsString()
 
         then:
