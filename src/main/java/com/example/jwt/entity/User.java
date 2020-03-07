@@ -42,4 +42,7 @@ public class User implements Serializable {
     @Email
     @Column(name = "email", unique = true)
     private String email;
+
+    @Column(name = "refresh_token")
+    private String refreshToken;
 }

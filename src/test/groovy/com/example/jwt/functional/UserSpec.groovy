@@ -8,6 +8,7 @@ import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Specification
 
@@ -16,23 +17,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
 class UserSpec extends Specification{
 
     @Autowired
     UserController userController
 
     @Autowired
-    UserFaker userFaker
+    UserRepository userRepository
 
     @Autowired
-    UserRepository userRepository
+    UserFaker userFaker
 
     def "remove should return no content if all goes well"()
     {
 
         given:
         def mockMvc = MockMvcBuilders.standaloneSetup(userController).build()
-        def user = userFaker.create()
+        def user = userFaker.setUsername("mohammad").setPassword("mohammad").create()
         def parser = new JSONParser()
 
         when:

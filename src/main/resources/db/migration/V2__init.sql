@@ -1,0 +1,1 @@
+Alter table users add COLUMN refresh_token varchar(255) null;
